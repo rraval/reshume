@@ -1,3 +1,10 @@
+var KC_BACKSPACE = 8,
+    KC_NEWLINE = 13,
+    KC_LEFT = 37,
+    KC_UP = 38,
+    KC_RIGHT = 39,
+    KC_DOWN = 40;
+
 function Console() {
     // the table we'll be manipulating
     this.console = document.getElementById("console");
@@ -16,7 +23,8 @@ function Console() {
 
         switch(keycode) {
             // skip the events handled by controlKey
-            case 8: case 13: case 37: case 39:
+            case KC_BACKSPACE: case KC_NEWLINE:
+            case KC_LEFT: case KC_RIGHT:
                 return;
         }
 
@@ -38,14 +46,14 @@ function Console() {
     // the events are only fired by onKeyDown
     this.controlKey = function(event) {
         switch(this.getKeyCode(event)) {
-            case 8: // backspace
+            case KC_BACKSPACE:
                 if(this.currentpos > 0) {
                     if(this.currentpos >= this.buffer[0].length) {
                         this.buffer[0] = this.buffer[0].substr(0, this.buffer[0].length - 1);
                     } else {
                         var buf = this.buffer[0];
-                        this.buffer[0] = buf.substr(0, this.currentpos);
-                        this.buffer[0] += buf.substr(this.currentpos + 1);
+                        this.buffer[0] = buf.substr(0, this.currentpos - 1);
+                        this.buffer[0] += buf.substr(this.currentpos);
                     }
                     --this.currentpos;
                     this.update();
@@ -53,7 +61,7 @@ function Console() {
                     this.beep();
                 }
                 break;
-            case 13:
+            case KC_NEWLINE:
                 // remove the cursor from the current command
                 var row = this.console.rows[this.console.rows.length - 1];
                 var prompt = this.prompt.replace("%pwd", this.pwd);
@@ -63,7 +71,7 @@ function Console() {
                 this.buffer.unshift("");
                 this.update();
                 break;
-            case 37: // left key
+            case KC_LEFT:
                 if(this.currentpos > 0) {
                     --this.currentpos;
                     this.update();
@@ -71,7 +79,7 @@ function Console() {
                     this.beep();
                 }
                 break;
-            case 39: // right key
+            case KC_RIGHT:
                 if(this.currentpos < this.buffer[0].length) {
                     ++this.currentpos;
                     this.update();
