@@ -20,8 +20,16 @@ function Console() {
                 return;
         }
 
-        // FIXME: insert characters based on currentpos!
-        this.buffer[0] += String.fromCharCode(this.getKeyCode(event));
+        var key = String.fromCharCode(keycode);
+        if(this.currentpos >= this.buffer[0].length) {
+            this.buffer[0] += key;
+        } else {
+            var buf = this.buffer[0];
+            this.buffer[0] = buf.substr(0, this.currentpos);
+            this.buffer[0] += key;
+            this.buffer[0] += buf.substr(this.currentpos);
+        }
+
         ++this.currentpos;
         this.update();
     };
@@ -32,7 +40,13 @@ function Console() {
         switch(this.getKeyCode(event)) {
             case 8: // backspace
                 if(this.currentpos > 0) {
-                    this.buffer[0] = this.buffer[0].substr(0, this.buffer[0].length - 1);
+                    if(this.currentpos >= this.buffer[0].length) {
+                        this.buffer[0] = this.buffer[0].substr(0, this.buffer[0].length - 1);
+                    } else {
+                        var buf = this.buffer[0];
+                        this.buffer[0] = buf.substr(0, this.currentpos);
+                        this.buffer[0] += buf.substr(this.currentpos + 1);
+                    }
                     --this.currentpos;
                     this.update();
                 } else {
@@ -88,7 +102,7 @@ function Console() {
     this.getKeyCode = function(event) {
         var keycode = event.keyCode; // IE or Webkit
         if(!keycode) {
-            keycode = event.which; // Firefox or Opera
+            keycode = event.which;   // Firefox or Opera
         }
         return keycode;
     };
