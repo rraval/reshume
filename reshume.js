@@ -85,9 +85,6 @@ function Console() {
         row.innerHTML = '<td><pre>' + html + '</pre></td>';
     };
 
-    this.newline = function() {
-   };
-
     this.getKeyCode = function(event) {
         var keycode = event.keyCode; // IE or Webkit
         if(!keycode) {
@@ -98,19 +95,6 @@ function Console() {
 
     this.beep = function() {
         // FIXME: figure out visual beep
-    };
-
-    this.blinkCursor = function() {
-        var cursor = document.getElementById("cursor");
-        if(this.blackCursor) {
-            cursor.style.backgroundColor = "white";
-            cursor.style.color = "black";
-            this.blackCursor = false;
-        } else {
-            cursor.style.backgroundColor = "black";
-            cursor.style.color = "white";
-            this.blackCursor = true;
-        }
     };
 
     this.update();
