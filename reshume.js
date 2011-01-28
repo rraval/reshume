@@ -5,7 +5,7 @@ var KC_BACKSPACE = 8,
     KC_RIGHT = 39,
     KC_DOWN = 40;
 
-function Console() {
+function Console(commands) {
     // the table we'll be manipulating
     this.console = document.getElementById("console");
     // history of commands, in reverse chronological order
@@ -80,13 +80,26 @@ function Console() {
                 this.histbuffer = null;
                 this.histbuffer_pos = null;
 
-                this.console.insertRow(this.console.rows.length);
                 if(!/^\s*$/.test(this.buffer)) {
                     // only push non empty commands to history
                     this.history.push(this.buffer);
 
-                    // FIXME: execute the command
+                    var cmdargs = this.buffer.trim().split(/\s+/),
+                        cmd = commands[cmdargs[0]],
+                        output = null;
+                    if(cmd === undefined) {
+                        output = cmdargs[0] + ": no such command";
+                    } else {
+                        output = cmd(cmdargs);
+                    }
+
+                    if(output) {
+                        var row = this.console.rows.length;
+                        this.console.insertRow(row);
+                        this.console.rows[row].innerHTML = '<td><pre>' + output + '</pre></td>';
+                    }
                 }
+                this.console.insertRow(this.console.rows.length);
                 this.buffer = "";
                 this.currentpos = 0;
                 this.update();
@@ -189,3 +202,14 @@ function Console() {
 
     this.update();
 }
+
+var reshume_commands = {
+    echo: function(argv) {
+              output = "";
+              for(var i = 1; i < argv.length; ++i) {
+                  output += argv[i];
+                  output += ' ';
+              }
+              return output;
+          }
+};

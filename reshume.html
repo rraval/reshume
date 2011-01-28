@@ -7,8 +7,8 @@
       #cursor { background-color: black; color: white; }
     </style>
   </head>
-  <body onload="cns = new Console();" onkeypress="cns.normalKey(event);"
-        onkeydown="cns.controlKey(event);">
+  <body onload="cns = new Console(reshume_commands);"
+      onkeypress="cns.normalKey(event);" onkeydown="cns.controlKey(event);">
     <table id="console" style="font-family: monospace">
         <tr></tr>
     </table>
