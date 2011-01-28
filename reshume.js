@@ -18,7 +18,7 @@ function Console(commands) {
     // current cursor position
     this.currentpos = 0;
     // the shell prompt
-    this.prompt = '<span class="cyantext">[</span>%pwd<span class="cyantext">]</span>$ ';
+    this.prompt = '<span class="path-marker">[</span><span class="path">%pwd</span><span class="path-marker">]</span>$ ';
     // current working directory
     this.pwd = "/resume";
 
@@ -208,7 +208,7 @@ var reshume_commands = {
               output = "";
               for(var i = 1; i < argv.length; ++i) {
                   output += argv[i];
-                  output += ' ';
+                  output += " ";
               }
               return output;
           }
