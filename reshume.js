@@ -81,8 +81,14 @@ function Console() {
                 this.histbuffer_pos = null;
 
                 this.console.insertRow(this.console.rows.length);
-                this.history.push(this.buffer);
+                if(!/^\s*$/.test(this.buffer)) {
+                    // only push non empty commands to history
+                    this.history.push(this.buffer);
+
+                    // FIXME: execute the command
+                }
                 this.buffer = "";
+                this.currentpos = 0;
                 this.update();
                 break;
 
@@ -115,7 +121,6 @@ function Console() {
                                            this.history[this.history.length - 1]];
                         this.histbuffer_pos = 1;
                         this.buffer = this.histbuffer[this.histbuffer_pos];
-                        this.update();
                     }
                 } else {
                     if(this.history.length <= this.histbuffer_pos) {
@@ -128,8 +133,10 @@ function Console() {
                     }
                     this.histbuffer[this.histbuffer_pos] = this.buffer;
                     this.buffer = this.histbuffer[++this.histbuffer_pos];
-                    this.update();
                 }
+
+                this.currentpos = this.buffer.length;
+                this.update();
                 break;
 
             case KC_DOWN:
@@ -140,6 +147,7 @@ function Console() {
 
                 this.histbuffer[this.histbuffer_pos] = this.buffer;
                 this.buffer = this.histbuffer[--this.histbuffer_pos];
+                this.currentpos = this.buffer.length;
                 this.update();
 
                 break;
@@ -153,7 +161,7 @@ function Console() {
         var prompt = this.prompt.replace("%pwd", this.pwd);
         var html;
 
-        if(!this.buffer.charAt(this.currentpos)) {
+        if(this.currentpos >= this.buffer.length) {
             // cursor at end of line
             html = prompt + this.buffer + '<span id="cursor">&nbsp;</span>';
         } else {
